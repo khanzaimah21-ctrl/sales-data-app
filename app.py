@@ -10,7 +10,7 @@ st.sidebar.markdown("---")
 @st.cache_data
 def load_data():
     try:
-        return pd.read_csv("Sales Data.csv.csv")
+        return pd.read_csv("sales data.csv.csv")
     except:
         return pd.DataFrame()
 
