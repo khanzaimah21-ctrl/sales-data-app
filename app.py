@@ -1,46 +1,33 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-
 st.set_page_config(page_title="Sales Dashboard by Zaimah Khan", layout="wide")
 st.sidebar.markdown("---")
 st.sidebar.info("Made by Zaimah Khan")
 BLUE = "#2a6fdb"
-
-
 if int(st.__version__.split(".")[1]) >= 50:
     FULL_WIDTH = {"width": "stretch"}
 else:
     FULL_WIDTH = {"use_container_width": True}
-
-
 def show(fig):
     st.plotly_chart(fig, **FULL_WIDTH)
 MONTHS = ["January", "February", "March", "April", "May", "June", "July",
           "August", "September", "October", "November", "December"]
-
-
 @st.cache_data
 def read_default_file():
     return pd.read_csv("sales data.csv.csv")
-
-
 @st.cache_data
 def clean_data(raw):
     report = {}
     df = raw.drop(columns="Unnamed: 0", errors="ignore")
     report["Rows in the file"] = len(df)
-
     before = len(df)
     df = df.dropna()
     report["Empty rows removed"] = before - len(df)
-
     df["Order Date"] = pd.to_datetime(df["Order Date"])
-
     before = len(df)
     df = df.drop_duplicates()
     report["Duplicate rows removed"] = before - len(df)
-
     before = len(df)
     df = df[df["Order Date"].dt.year == 2019].copy()
     report["Rows outside 2019 removed"] = before - len(df)
@@ -63,9 +50,7 @@ try:
 except FileNotFoundError:
     st.error("Put `Sales Data.csv` in the same folder as app.py, or upload it in the sidebar.")
     st.stop()
-
 df, report = clean_data(raw)
-
 # ---------- filters ----------
 st.sidebar.header("Filters")
 all_cities = sorted(df["City"].unique())
@@ -84,11 +69,8 @@ if products != "All":
     filtered = filtered[filtered["Product"] == products]
 if filtered.empty:
     filtered = df.copy()
-
 orders = filtered.groupby("Order ID")["Sales"].sum().reset_index()
-
 tab_dashboard, tab_cleaning = st.tabs(["Dashboard", "Data cleaning"])
-
 # ---------- dashboard tab ----------
 with tab_dashboard:
     c1, c2, c3, c4 = st.columns(4)
@@ -104,16 +86,16 @@ with tab_dashboard:
         ordered_months = [m for m in MONTHS if m in months]
         monthly = filtered.groupby("Month")["Sales"].sum().reindex(ordered_months).reset_index()
         show(px.bar(monthly, x="Month", y="Sales", color_discrete_sequence=[BLUE]))
-if monthly.empty or monthly["Sales"].isna().all():
+ if monthly.empty or monthly["Sales"].isna().all():
     st.warning("No data for selected filter, showing all data.")
     monthly = df.groupby("Month")["Sales"].sum().reset_index() if "Sales" in df.columns else df
 
-if not monthly.empty:
-    try:
+ if not monthly.empty:
+     try:
         best = monthly.loc[monthly["Sales"].idxmax()]
-    except:
+     except:
         best = monthly.iloc[0]
-else:
+ else:
     best = None
         st.caption(f"Best month: **{best['Month']}** (\\${best['Sales']:,.0f})")
 
