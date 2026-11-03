@@ -136,7 +136,7 @@ with tab_dashboard:
     with right:
         st.subheader("Most sold products (pieces)")
         sold = filtered.groupby("Product")["Quantity Ordered"].sum().sort_values(ascending=False).reset_index()
-        st.dataframe(sold, hide_index=True)
+        st.table(sold)
         st.caption("Compare with Q4: the most sold products are cheap, the most profitable are expensive.")
 
 # ---------- cleaning tab ----------
@@ -158,4 +158,4 @@ with tab_cleaning:
              "so we keep those too.")
 
     st.subheader("Cleaned data (first 100 rows)")
-    st.dataframe(df.head(100), hide_index=True)
+    st.table(df.head(100))
