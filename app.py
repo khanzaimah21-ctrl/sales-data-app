@@ -13,7 +13,7 @@ st.sidebar.header("Filters")
 
 @st.cache_data
 def load_data():
-    df = pd.read_csv("Sales Data.csv")
+    df = pd.read_csv("sales data.csv.csv")
     # Clean Month if it's number
     if "Month" in df.columns:
         try:
