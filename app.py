@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-st.set_page_config(page_title="Sales Dashboard", layout="wide")
+st.set_page_config(page_title="Sales Dashboard by Zaimah Khan", layout="wide")
 
 BLUE = "#2a6fdb"
 
@@ -21,7 +21,7 @@ MONTHS = ["January", "February", "March", "April", "May", "June", "July",
 
 @st.cache_data
 def read_default_file():
-    return pd.read_csv("Sales Data.csv")
+    return pd.read_csv("Sales Data.csv.csv")
 
 
 @st.cache_data
