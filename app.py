@@ -21,7 +21,7 @@ MONTHS = ["January", "February", "March", "April", "May", "June", "July",
 
 @st.cache_data
 def read_default_file():
-    return pd.read_csv("Sales Data.csv.csv")
+    return pd.read_csv("sales data.csv.csv")
 
 
 @st.cache_data
