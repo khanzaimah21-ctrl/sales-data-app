@@ -70,11 +70,17 @@ st.sidebar.header("Filters")
 all_cities = sorted(df["City"].unique())
 all_products = sorted(df["Product"].unique())
 
-months = st.sidebar.multiselect("Month", MONTHS, default=MONTHS)
-cities = st.sidebar.multiselect("City", all_cities, default=all_cities)
-products = st.sidebar.multiselect("Product", all_products, default=all_products)
+months = st.sidebar.selectbox("Month", ["All"] + MONTHS)
+cities = st.sidebar.selectbox("City", ["All"] + all_cities)
+products = st.sidebar.selectbox("Product", ["All"] + all_products)
 
-filtered = df[df["Month"].isin(months) & df["City"].isin(cities) & df["Product"].isin(products)]
+filtered = df.copy()
+if months != "All":
+    filtered = filtered[filtered["Month"] == months]
+if cities != "All":
+    filtered = filtered[filtered["City"] == cities]
+if products != "All":
+    filtered = filtered[filtered["Product"] == products]
 if filtered.empty:
     st.warning("No data for these filters. Select at least one month, city and product.")
     st.stop()
