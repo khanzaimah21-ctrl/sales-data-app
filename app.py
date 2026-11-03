@@ -86,17 +86,18 @@ with tab_dashboard:
         ordered_months = [m for m in MONTHS if m in months]
         monthly = filtered.groupby("Month")["Sales"].sum().reindex(ordered_months).reset_index()
         show(px.bar(monthly, x="Month", y="Sales", color_discrete_sequence=[BLUE]))
- if monthly.empty or monthly["Sales"].isna().all():
+         if monthly.empty or monthly["Sales"].isna().all():
     st.warning("No data for selected filter, showing all data.")
     monthly = df.groupby("Month")["Sales"].sum().reset_index() if "Sales" in df.columns else df
 
- if not monthly.empty:
-     try:
-        best = monthly.loc[monthly["Sales"].idxmax()]
-     except:
-        best = monthly.iloc[0]
- else:
-    best = None
+         if not monthly.empty:
+             try:
+                 best = monthly.loc[monthly["Sales"].idxmax()]
+         except:
+                best = monthly.iloc[0]
+         else:
+              best = None
+         if best is not None:
         st.caption(f"Best month: **{best['Month']}** (\\${best['Sales']:,.0f})")
 
     with right:
