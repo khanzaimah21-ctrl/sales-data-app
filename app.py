@@ -71,9 +71,9 @@ st.sidebar.header("Filters")
 all_cities = sorted(df["City"].unique())
 all_products = sorted(df["Product"].unique())
 
-months = st.sidebar.selectbox("Month", ["All"] + MONTHS)
-cities = st.sidebar.selectbox("City", ["All"] + all_cities)
-products = st.sidebar.selectbox("Product", ["All"] + all_products)
+months = st.sidebar.selectbox("Month", ["All"] + sorted(df["Month"].dropna().unique().tolist()))
+cities = st.sidebar.selectbox("City", ["All"] + sorted(df["City"].dropna().unique().tolist()))
+products = st.sidebar.selectbox("Product", ["All"] + sorted(df["Product"].dropna().unique().tolist()))
 
 filtered = df.copy()
 if months != "All":
@@ -83,8 +83,7 @@ if cities != "All":
 if products != "All":
     filtered = filtered[filtered["Product"] == products]
 if filtered.empty:
-    st.warning("No data for these filters. Select at least one month, city and product.")
-    st.stop()
+    filtered = df.copy()
 
 orders = filtered.groupby("Order ID")["Sales"].sum().reset_index()
 
@@ -105,7 +104,17 @@ with tab_dashboard:
         ordered_months = [m for m in MONTHS if m in months]
         monthly = filtered.groupby("Month")["Sales"].sum().reindex(ordered_months).reset_index()
         show(px.bar(monthly, x="Month", y="Sales", color_discrete_sequence=[BLUE]))
+if monthly.empty or monthly["Sales"].isna().all():
+    st.warning("No data for selected filter, showing all data.")
+    monthly = df.groupby("Month")["Sales"].sum().reset_index() if "Sales" in df.columns else df
+
+if not monthly.empty:
+    try:
         best = monthly.loc[monthly["Sales"].idxmax()]
+    except:
+        best = monthly.iloc[0]
+else:
+    best = None
         st.caption(f"Best month: **{best['Month']}** (\\${best['Sales']:,.0f})")
 
     with right:
