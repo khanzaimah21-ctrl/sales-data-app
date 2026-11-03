@@ -3,7 +3,8 @@ import plotly.express as px
 import streamlit as st
 
 st.set_page_config(page_title="Sales Dashboard by Zaimah Khan", layout="wide")
-
+st.sidebar.markdown("---")
+st.sidebar.info("Made by Zaimah Khan")
 BLUE = "#2a6fdb"
 
 
